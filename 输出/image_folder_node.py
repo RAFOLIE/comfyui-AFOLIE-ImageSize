@@ -13,8 +13,34 @@ from datetime import datetime
 
 
 def tensor2pil(image):
-    """Convert tensor to PIL Image"""
-    return Image.fromarray(np.clip(255. * image.cpu().numpy().squeeze(), 0, 255).astype(np.uint8))
+    """Convert tensor to PIL Image (supports RGB and RGBA)"""
+    # 获取 numpy 数组
+    img_np = image.cpu().numpy()
+    
+    # 如果有 squeeze 维度，去掉
+    if img_np.ndim == 4 and img_np.shape[0] == 1:
+        img_np = img_np.squeeze(0)
+    
+    # 转换为 0-255 范围
+    img_np = np.clip(255. * img_np, 0, 255).astype(np.uint8)
+    
+    # 根据通道数创建不同模式的图像
+    if img_np.ndim == 3:
+        if img_np.shape[2] == 4:
+            # RGBA 图像
+            return Image.fromarray(img_np, mode='RGBA')
+        elif img_np.shape[2] == 3:
+            # RGB 图像
+            return Image.fromarray(img_np, mode='RGB')
+        elif img_np.shape[2] == 1:
+            # 灰度图像
+            return Image.fromarray(img_np.squeeze(2), mode='L')
+    elif img_np.ndim == 2:
+        # 灰度图像
+        return Image.fromarray(img_np, mode='L')
+    
+    # 默认返回 RGB
+    return Image.fromarray(img_np)
 
 
 class AFOLIE图像文件夹:

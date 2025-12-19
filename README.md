@@ -1,662 +1,517 @@
 # AFOLIE ImageSize - ComfyUI Custom Nodes
 
-[English](#english) | [中文](#中文)
+<div align="center">
+
+**🌍 Language / 语言 / 言語 / 언어 / Sprache / Lingua / Språk**
+
+[English](#english) | [中文](#中文) | [日本語](#日本語) | [한국어](#한국어) | [Deutsch](#deutsch) | [Italiano](#italiano) | [Svenska](#svenska)
+
+</div>
 
 ---
 
-## English
+<a name="english"></a>
+## 🇬🇧 English
 
-A comprehensive ComfyUI custom node collection for image processing, providing Photoshop-like image resizing, batch image loading, and custom folder saving functionality.
+A comprehensive ComfyUI custom node collection for image processing, providing Photoshop-like image resizing, batch image loading, background transparency, pixel alignment, and custom folder saving functionality.
 
 ### 📦 Features Overview
 
-This plugin provides **7 powerful nodes** organized into three categories:
+This plugin provides **9 powerful nodes** organized into four categories:
 
 #### 🖼️ Image Processing (AFOLIE/图像)
-- **Image Size (图像像素缩放)** - Pixel-based image resizing
-- **Image Scale (图像倍数缩放)** - Scale-based image resizing
+| Node | Description |
+|------|-------------|
+| **Image Pixel Resize 📐** | Pixel-based image resizing with 7 resampling methods |
+| **Image Scale Resize 🔢** | Scale-based image resizing (0.01x - 12x) |
+| **Image Grid Crop ✂️** | Split image into grid cells |
+| **Pixel Alignment 🎯** | Align pixels to perfect grid for pixel art |
+| **Background Transparent 🎨** | Convert specified color background to transparent |
 
 #### 📥 Input Nodes (AFOLIE/输入)
-- **Input Batch Images (Input批次图像)** - Load batch images with original sizes
-- **Input Batch Images Pixels (Input批次图像像素)** - Load and resize to uniform pixel dimensions
-- **Input Batch Images Scale (Input批次图像倍数)** - Load and scale by multiplier
+| Node | Description |
+|------|-------------|
+| **Input Batch Images 📁** | Load batch images preserving original sizes |
+| **Input Batch Images Pixels 📐** | Load and resize to uniform pixel dimensions |
+| **Input Batch Images Scale 🔢** | Load and scale by multiplier |
 
 #### 💾 Output Nodes (AFOLIE/输出)
-- **Image Folder (图像文件夹)** - Save images to custom folder paths
+| Node | Description |
+|------|-------------|
+| **Image Folder 💾** | Save images to custom folder paths |
 
----
+### 📸 Screenshots
 
-### 🎯 Node Details
+![Node Overview](images/node_overview.png)
 
-#### 1. Image Size (图像像素缩放) 📏
+### 🎯 Key Features
 
-Photoshop-like image resizing with pixel-based dimensions.
+#### Background Transparent 🎨
+- Hex color input (#ffffff format)
+- Color picker with HSB slider
+- Color tolerance slider (0-100%)
+- Protect internal colors option
 
-**Features:**
-- Direct pixel dimension control (64-8192px)
-- Aspect ratio lock/unlock
-- 7 resampling methods
+#### Pixel Alignment 🎯
+- Align pixels to perfect grid
+- Fix AI-generated pixel art inconsistencies
+- Quantize colors to strict palette
+- Preserve details like dithering
+
+#### Image Grid Crop ✂️
+- Split image into horizontal × vertical grid
+- Set 0 to skip that direction (for strips)
 - Batch processing support
-
-**Parameters:**
-| Parameter | Type | Range | Default | Description |
-|-----------|------|-------|---------|-------------|
-| image | IMAGE | - | - | Input image |
-| resize_mode | Choice | pixels/scale | pixels | Resize mode |
-| width | INT | 64-8192 | 512 | Target width (pixels mode) |
-| height | INT | 64-8192 | 512 | Target height (pixels mode) |
-| scale_factor | FLOAT | 0.01-12.0 | 1.0 | Scale multiplier (scale mode) |
-| maintain_aspect_ratio | BOOLEAN | true/false | true | Lock aspect ratio |
-| resample | BOOLEAN | true/false | true | Enable resampling |
-| resampling_method | Choice | 7 methods | bicubic_smooth | Sampling method |
-
-**Resampling Methods:**
-- `bicubic_smooth` - Smooth bicubic interpolation (default)
-- `preserve_details_enlarge` - Lanczos, best for enlarging
-- `preserve_details_2` - High-quality Lanczos
-- `bicubic_smoother_enlarge` - Smoother bicubic for enlarging
-- `bicubic_sharper_reduce` - Sharper bicubic for reducing
-- `nearest_hard_edges` - Nearest neighbor for pixel art
-- `bilinear` - Bilinear interpolation for fast processing
-
-**Use Cases:**
-```
-Enlarge with detail preservation:
-- resize_mode: pixels
-- width: 2048, height: 2048
-- resampling_method: preserve_details_enlarge
-
-Reduce image size:
-- resize_mode: scale
-- scale_factor: 0.5
-- resampling_method: bicubic_sharper_reduce
-
-Pixel art scaling:
-- resize_mode: scale
-- scale_factor: 4.0
-- resampling_method: nearest_hard_edges
-```
-
----
-
-#### 2. Image Scale (图像倍数缩放) 🔢
-
-Scale-based image resizing with multiplier control.
-
-**Features:**
-- Scale multiplier: 0.01x - 12x
-- Same resampling methods as Image Size
-- Aspect ratio preservation
-- Batch processing support
-
-**Parameters:**
-Same as Image Size node, optimized for scale-based workflow.
-
----
-
-#### 3. Input Batch Images (Input批次图像) 📁
-
-Load multiple images from a folder while preserving original dimensions.
-
-**Features:**
-- Load all images from specified folder
-- Preserve original image sizes
-- Support PNG (with transparency) and JPG formats
-- Automatic batch processing via list output
-- Sorted file loading
-
-**Parameters:**
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| 路径 (Path) | STRING | E:/AI/ComfyUI_works/input_images | Folder path |
-| 文件格式 (Format) | Choice | all | File format filter (all/png/jpg) |
-
-**Output:**
-- IMAGE (List) - Each image output individually for batch processing
-
-**Workflow:**
-```
-Input Batch Images → Process → Save
-                  ↓
-            (14 images loaded)
-                  ↓
-         (14 iterations automatically)
-                  ↓
-            (14 images saved)
-```
-
----
-
-#### 4. Input Batch Images Pixels (Input批次图像像素) 📐
-
-Load batch images and resize all to uniform pixel dimensions.
-
-**Features:**
-- Unified pixel dimensions for all images
-- 4 resampling methods
-- Automatic format conversion
-- Batch processing support
-
-**Parameters:**
-| Parameter | Type | Range | Default | Description |
-|-----------|------|-------|---------|-------------|
-| 路径 (Path) | STRING | - | E:/AI/ComfyUI_works/input_images | Folder path |
-| 文件格式 (Format) | Choice | all/png/jpg | all | File format |
-| 统一宽度 (Width) | INT | 64-8192 | 512 | Unified width |
-| 统一高度 (Height) | INT | 64-8192 | 512 | Unified height |
-| 采样方法 (Method) | Choice | 4 methods | Lanczos | Resampling method |
-
-**Resampling Methods:**
-- `保留细节(Lanczos)` - Preserve details (best quality)
-- `两次立方(Bicubic)` - Bicubic interpolation
-- `两次线性(Bilinear)` - Bilinear interpolation
-- `邻近(Nearest)` - Nearest neighbor (pixel art)
-
----
-
-#### 5. Input Batch Images Scale (Input批次图像倍数) 🔢
-
-Load batch images and scale all by a uniform multiplier.
-
-**Features:**
-- Scale all images by same multiplier
-- Base size from first image
-- 4 resampling methods
-- Batch processing support
-
-**Parameters:**
-| Parameter | Type | Range | Default | Description |
-|-----------|------|-------|---------|-------------|
-| 路径 (Path) | STRING | - | E:/AI/ComfyUI_works/input_images | Folder path |
-| 文件格式 (Format) | Choice | all/png/jpg | all | File format |
-| 倍数 (Scale) | FLOAT | 0.01-12.0 | 1.0 | Scale multiplier |
-| 采样方法 (Method) | Choice | 4 methods | Lanczos | Resampling method |
-
-**Example:**
-```
-First image: 1024x768
-Scale: 2.0
-Result: All images scaled to 2048x1536
-```
-
----
-
-#### 6. Image Folder (图像文件夹) 💾
-
-Save images to custom folder paths instead of default output folder.
-
-**Features:**
-- Custom folder path support
-- Multiple format support (PNG/JPG/JPEG/WebP)
-- Highest quality saving
-- Unique filename with counter
-- Metadata support (PNG)
-- Automatic folder creation
-
-**Parameters:**
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| 图像 (Image) | IMAGE | - | Input image |
-| 文件夹路径 (Path) | STRING | E:/AI/ComfyUI_works/output_custom | Save folder path |
-| 文件名前缀 (Prefix) | STRING | AFOLIE | Filename prefix |
-| 文件格式 (Format) | Choice | png | File format (png/jpg/jpeg/webp) |
-| 保存元数据 (Metadata) | BOOLEAN | true | Save metadata (PNG only) |
-
-**Filename Format:**
-```
-Prefix_Timestamp_Counter.Format
-Example: AFOLIE_20251213_173141_0000.png
-         AFOLIE_20251213_173141_0001.png
-         AFOLIE_20251213_173141_0002.png
-```
-
-**Quality Settings:**
-- PNG: compress_level=0 (no compression, best quality)
-- JPG: quality=100, optimize=True
-- WebP: quality=100, method=6
-
-**Output:**
-- IMAGE - Pass-through for chaining
-- STRING - Saved file paths
-
----
 
 ### 📥 Installation
 
-#### Method 1: Git Clone
 ```bash
 cd ComfyUI/custom_nodes
 git clone https://github.com/yourusername/comfyui-AFOLIE-ImageSize.git
 ```
 
-#### Method 2: Manual Installation
-1. Download and extract the plugin
-2. Copy the `comfyui-AFOLIE-ImageSize` folder to `ComfyUI/custom_nodes/`
-3. Restart ComfyUI
+### 📋 Requirements
 
-#### Method 3: ComfyUI Manager
-Search for "AFOLIE ImageSize" in ComfyUI Manager and install.
-
----
-
-### 🚀 Usage Examples
-
-#### Example 1: Batch Image Processing with Uniform Size
 ```
-Input Batch Images Pixels (512x512)
-    ↓
-[Your Processing Nodes]
-    ↓
-Image Folder (Save to custom path)
+torch>=1.9.0
+numpy>=1.21.0
+Pillow>=8.0.0
+scipy>=1.7.0
 ```
-
-#### Example 2: Scale Multiple Images
-```
-Input Batch Images Scale (2x)
-    ↓
-[Your Processing Nodes]
-    ↓
-Image Folder (Save as PNG)
-```
-
-#### Example 3: Mixed Size Batch Processing
-```
-Input Batch Images (Original sizes)
-    ↓
-Image Size (Resize individually)
-    ↓
-Image Folder (Save to custom path)
-```
-
-#### Example 4: High-Quality Upscaling
-```
-Load Image
-    ↓
-Image Size (4096x4096, preserve_details_enlarge)
-    ↓
-Image Folder (Save as PNG, highest quality)
-```
-
----
-
-### 🔧 Technical Details
-
-**Dependencies:**
-- torch
-- numpy
-- PIL (Pillow)
-- folder_paths (ComfyUI)
-
-**Image Processing:**
-- Tensor-based processing
-- Automatic format conversion
-- Batch processing support
-- Color precision preservation
-
-**File Handling:**
-- Automatic directory creation
-- Unique filename generation
-- Format-specific optimization
-- Metadata preservation (PNG)
-
----
-
-### 📋 Version History
-
-#### v1.0.0 (2025-12-13)
-- ✅ Initial release
-- ✅ Image Size node with 7 resampling methods
-- ✅ Image Scale node
-- ✅ Three Input batch nodes
-- ✅ Image Folder save node
-- ✅ Batch processing support
-- ✅ Counter-based unique filenames
-
----
 
 ### 📝 License
 
-MIT License
+GPL-3.0 License
 
 ### 👤 Author
 
 AFOLIE
 
-### 🐛 Issues & Support
-
-For issues, suggestions, or feature requests, please submit an issue on GitHub.
-
 ---
 
-## 中文
+<a name="中文"></a>
+## 🇨🇳 中文
 
-ComfyUI自定义节点集合，提供类似Photoshop的图像大小调整、批量图像加载和自定义文件夹保存功能。
+ComfyUI 自定义节点集合，提供类似 Photoshop 的图像大小调整、批量图像加载、背景透明化、像素对齐和自定义文件夹保存功能。
 
 ### 📦 功能概览
 
-本插件提供 **7个强大的节点**，分为三个类别：
+本插件提供 **9 个强大的节点**，分为四个类别：
 
 #### 🖼️ 图像处理 (AFOLIE/图像)
-- **图像像素缩放** - 基于像素的图像大小调整
-- **图像倍数缩放** - 基于倍数的图像缩放
+| 节点 | 说明 |
+|------|------|
+| **图像像素缩放 📐** | 基于像素的图像大小调整，支持 7 种采样方法 |
+| **图像倍数缩放 🔢** | 基于倍数的图像缩放 (0.01x - 12x) |
+| **图像网格裁剪 ✂️** | 将图像分割成网格单元 |
+| **像素对齐 🎯** | 将像素对齐到完美网格，适用于像素艺术 |
+| **背景透明化 🎨** | 将指定颜色的背景转换为透明 |
 
 #### 📥 输入节点 (AFOLIE/输入)
-- **Input批次图像 📁** - 加载批次图像（保持原始尺寸）
-- **Input批次图像像素 📐** - 加载并调整到统一像素尺寸
-- **Input批次图像倍数 🔢** - 加载并按倍数统一缩放
+| 节点 | 说明 |
+|------|------|
+| **Input批次图像 📁** | 加载批次图像，保持原始尺寸 |
+| **Input批次图像像素 📐** | 加载并调整到统一像素尺寸 |
+| **Input批次图像倍数 🔢** | 加载并按倍数统一缩放 |
 
 #### 💾 输出节点 (AFOLIE/输出)
-- **图像文件夹 💾** - 保存图像到自定义文件夹路径
+| 节点 | 说明 |
+|------|------|
+| **图像文件夹 💾** | 保存图像到自定义文件夹路径 |
 
----
+### 📸 截图
 
-### 🎯 节点详情
+![节点概览](images/node_overview.png)
 
-#### 1. 图像像素缩放 📏
+### 🎯 主要功能
 
-类似Photoshop的图像大小调整功能，基于像素尺寸。
+#### 背景透明化 🎨
+- 十六进制颜色输入 (#ffffff 格式)
+- 颜色选择器，支持色相立方体和 HSB 滑块
+- 颜色容差滑块 (0-100%)
+- 保护主体内部颜色选项
 
-**功能特性：**
-- 直接像素尺寸控制（64-8192像素）
-- 宽高比锁定/解锁
-- 7种重新采样方法
-- 支持批处理
+#### 像素对齐 🎯
+- 将像素对齐到完美网格
+- 修复 AI 生成像素艺术的不一致
+- 量化颜色到严格的调色板
+- 保持细节（如抖动）
 
-**参数说明：**
-| 参数 | 类型 | 范围 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| image | IMAGE | - | - | 输入图像 |
-| resize_mode | 选择 | pixels/scale | pixels | 调整模式 |
-| width | 整数 | 64-8192 | 512 | 目标宽度（像素模式） |
-| height | 整数 | 64-8192 | 512 | 目标高度（像素模式） |
-| scale_factor | 浮点 | 0.01-12.0 | 1.0 | 缩放倍数（倍数模式） |
-| maintain_aspect_ratio | 布尔 | true/false | true | 锁定宽高比 |
-| resample | 布尔 | true/false | true | 启用重新采样 |
-| resampling_method | 选择 | 7种方法 | bicubic_smooth | 采样方法 |
-
-**重新采样方法：**
-- `两次立方(平滑渐变)` - 平滑的双三次插值（默认）
-- `保留细节(扩大)` - Lanczos算法，最适合放大
-- `保留细节 2.0` - 高质量Lanczos
-- `两次立方(较平滑)(扩大)` - 平滑的双三次放大
-- `两次立方(较锐利)(缩减)` - 锐利的双三次缩小
-- `邻近(硬边缘)` - 最近邻插值，适合像素艺术
-- `两次线性` - 双线性插值，快速处理
-
-**使用场景：**
-```
-放大并保留细节：
-- resize_mode: pixels
-- width: 2048, height: 2048
-- resampling_method: preserve_details_enlarge
-
-缩小图像：
-- resize_mode: scale
-- scale_factor: 0.5
-- resampling_method: bicubic_sharper_reduce
-
-像素艺术缩放：
-- resize_mode: scale
-- scale_factor: 4.0
-- resampling_method: nearest_hard_edges
-```
-
----
-
-#### 2. 图像倍数缩放 🔢
-
-基于倍数的图像缩放控制。
-
-**功能特性：**
-- 缩放倍数：0.01x - 12x
-- 与图像像素缩放相同的采样方法
-- 保持宽高比
-- 支持批处理
-
-**参数说明：**
-与图像像素缩放节点相同，针对倍数工作流优化。
-
----
-
-#### 3. Input批次图像 📁
-
-从文件夹加载多张图像，保持原始尺寸。
-
-**功能特性：**
-- 从指定文件夹加载所有图像
-- 保持原始图像尺寸
-- 支持PNG（保留透明度）和JPG格式
-- 通过列表输出自动批处理
-- 按文件名排序加载
-
-**参数说明：**
-| 参数 | 类型 | 默认值 | 说明 |
-|------|------|---------|------|
-| 路径 | STRING | E:/AI/ComfyUI_works/input_images | 文件夹路径 |
-| 文件格式 | 选择 | all | 文件格式筛选（all/png/jpg） |
-
-**输出：**
-- IMAGE（列表） - 每张图像单独输出用于批处理
-
-**工作流程：**
-```
-Input批次图像 → 处理 → 保存
-            ↓
-      (加载14张图像)
-            ↓
-      (自动迭代14次)
-            ↓
-      (保存14张图像)
-```
-
----
-
-#### 4. Input批次图像像素 📐
-
-加载批次图像并调整所有图像到统一像素尺寸。
-
-**功能特性：**
-- 所有图像统一到指定像素尺寸
-- 4种重新采样方法
-- 自动格式转换
-- 支持批处理
-
-**参数说明：**
-| 参数 | 类型 | 范围 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| 路径 | STRING | - | E:/AI/ComfyUI_works/input_images | 文件夹路径 |
-| 文件格式 | 选择 | all/png/jpg | all | 文件格式 |
-| 统一宽度 | 整数 | 64-8192 | 512 | 统一宽度 |
-| 统一高度 | 整数 | 64-8192 | 512 | 统一高度 |
-| 采样方法 | 选择 | 4种方法 | Lanczos | 重新采样方法 |
-
-**采样方法：**
-- `保留细节(Lanczos)` - 保留细节（最佳质量）
-- `两次立方(Bicubic)` - 双三次插值
-- `两次线性(Bilinear)` - 双线性插值
-- `邻近(Nearest)` - 最近邻（像素艺术）
-
----
-
-#### 5. Input批次图像倍数 🔢
-
-加载批次图像并按统一倍数缩放所有图像。
-
-**功能特性：**
-- 所有图像按相同倍数缩放
-- 基准尺寸来自第一张图像
-- 4种重新采样方法
-- 支持批处理
-
-**参数说明：**
-| 参数 | 类型 | 范围 | 默认值 | 说明 |
-|------|------|------|--------|------|
-| 路径 | STRING | - | E:/AI/ComfyUI_works/input_images | 文件夹路径 |
-| 文件格式 | 选择 | all/png/jpg | all | 文件格式 |
-| 倍数 | 浮点 | 0.01-12.0 | 1.0 | 缩放倍数 |
-| 采样方法 | 选择 | 4种方法 | Lanczos | 重新采样方法 |
-
-**示例：**
-```
-第一张图像：1024x768
-倍数：2.0
-结果：所有图像缩放到 2048x1536
-```
-
----
-
-#### 6. 图像文件夹 💾
-
-将图像保存到自定义文件夹路径，而不是默认的output文件夹。
-
-**功能特性：**
-- 支持自定义文件夹路径
-- 支持多种格式（PNG/JPG/JPEG/WebP）
-- 最高质量保存
-- 使用计数器确保文件名唯一
-- 支持元数据（PNG）
-- 自动创建文件夹
-
-**参数说明：**
-| 参数 | 类型 | 默认值 | 说明 |
-|------|------|---------|------|
-| 图像 | IMAGE | - | 输入图像 |
-| 文件夹路径 | STRING | E:/AI/ComfyUI_works/output_custom | 保存文件夹路径 |
-| 文件名前缀 | STRING | AFOLIE | 文件名前缀 |
-| 文件格式 | 选择 | png | 文件格式（png/jpg/jpeg/webp） |
-| 保存元数据 | 布尔 | true | 保存元数据（仅PNG） |
-
-**文件命名格式：**
-```
-前缀_时间戳_计数器.格式
-示例：AFOLIE_20251213_173141_0000.png
-     AFOLIE_20251213_173141_0001.png
-     AFOLIE_20251213_173141_0002.png
-```
-
-**质量设置：**
-- PNG：compress_level=0（无压缩，最佳质量）
-- JPG：quality=100, optimize=True
-- WebP：quality=100, method=6
-
-**输出：**
-- IMAGE - 传递用于链接
-- STRING - 保存的文件路径
-
----
+#### 图像网格裁剪 ✂️
+- 将图像分割成 横向 × 纵向 网格
+- 设置 0 跳过该方向（用于裁剪长条）
+- 支持批量处理
 
 ### 📥 安装方法
 
-#### 方法1：Git克隆
 ```bash
 cd ComfyUI/custom_nodes
 git clone https://github.com/yourusername/comfyui-AFOLIE-ImageSize.git
 ```
 
-#### 方法2：手动安装
-1. 下载并解压插件
-2. 将 `comfyui-AFOLIE-ImageSize` 文件夹复制到 `ComfyUI/custom_nodes/`
-3. 重启ComfyUI
+### 📋 依赖
 
-#### 方法3：ComfyUI Manager
-在ComfyUI Manager中搜索"AFOLIE ImageSize"并安装。
-
----
-
-### 🚀 使用示例
-
-#### 示例1：批量图像处理并统一尺寸
 ```
-Input批次图像像素 (512x512)
-    ↓
-[您的处理节点]
-    ↓
-图像文件夹 (保存到自定义路径)
+torch>=1.9.0
+numpy>=1.21.0
+Pillow>=8.0.0
+scipy>=1.7.0
 ```
-
-#### 示例2：批量缩放图像
-```
-Input批次图像倍数 (2倍)
-    ↓
-[您的处理节点]
-    ↓
-图像文件夹 (保存为PNG)
-```
-
-#### 示例3：混合尺寸批处理
-```
-Input批次图像 (保持原始尺寸)
-    ↓
-图像像素缩放 (单独调整)
-    ↓
-图像文件夹 (保存到自定义路径)
-```
-
-#### 示例4：高质量放大
-```
-加载图像
-    ↓
-图像像素缩放 (4096x4096, preserve_details_enlarge)
-    ↓
-图像文件夹 (保存为PNG，最高质量)
-```
-
----
-
-### 🔧 技术细节
-
-**依赖项：**
-- torch
-- numpy
-- PIL (Pillow)
-- folder_paths (ComfyUI)
-
-**图像处理：**
-- 基于张量的处理
-- 自动格式转换
-- 支持批处理
-- 保持颜色精度
-
-**文件处理：**
-- 自动创建目录
-- 唯一文件名生成
-- 格式特定优化
-- 元数据保留（PNG）
-
----
-
-### 📋 版本历史
-
-#### v1.0.0 (2025-12-13)
-- ✅ 初始版本发布
-- ✅ 图像像素缩放节点，支持7种采样方法
-- ✅ 图像倍数缩放节点
-- ✅ 三个Input批次节点
-- ✅ 图像文件夹保存节点
-- ✅ 批处理支持
-- ✅ 基于计数器的唯一文件名
-
----
 
 ### 📝 许可证
 
-GPL-3.0 license
+GPL-3.0 许可证
 
 ### 👤 作者
 
 AFOLIE
 
-### 🐛 问题与支持
+---
 
-如有问题、建议或功能请求，请在GitHub上提交issue。
+<a name="日本語"></a>
+## 🇯🇵 日本語
+
+画像処理のための包括的な ComfyUI カスタムノードコレクション。Photoshop のような画像リサイズ、バッチ画像読み込み、背景透明化、ピクセルアライメント、カスタムフォルダ保存機能を提供します。
+
+### 📦 機能概要
+
+このプラグインは **9 つの強力なノード** を 4 つのカテゴリに分けて提供します：
+
+#### 🖼️ 画像処理 (AFOLIE/图像)
+| ノード | 説明 |
+|--------|------|
+| **画像ピクセルリサイズ 📐** | ピクセルベースの画像リサイズ、7 種類のリサンプリング方法 |
+| **画像倍率リサイズ 🔢** | 倍率ベースの画像リサイズ (0.01x - 12x) |
+| **画像グリッドクロップ ✂️** | 画像をグリッドセルに分割 |
+| **ピクセルアライメント 🎯** | ピクセルアートのためにピクセルを完璧なグリッドに整列 |
+| **背景透明化 🎨** | 指定した色の背景を透明に変換 |
+
+#### 📥 入力ノード (AFOLIE/输入)
+| ノード | 説明 |
+|--------|------|
+| **バッチ画像入力 📁** | 元のサイズを保持してバッチ画像を読み込み |
+| **バッチ画像ピクセル入力 📐** | 統一ピクセルサイズにリサイズして読み込み |
+| **バッチ画像倍率入力 🔢** | 倍率で統一スケーリングして読み込み |
+
+#### 💾 出力ノード (AFOLIE/输出)
+| ノード | 説明 |
+|--------|------|
+| **画像フォルダ 💾** | カスタムフォルダパスに画像を保存 |
+
+### 📸 スクリーンショット
+
+![ノード概要](images/node_overview.png)
+
+### 🎯 主な機能
+
+#### 背景透明化 🎨
+- 16 進数カラー入力 (#ffffff 形式)
+- HSB スライダー付きカラーピッカー
+- 色許容度スライダー (0-100%)
+- 内部色保護オプション
+
+#### ピクセルアライメント 🎯
+- ピクセルを完璧なグリッドに整列
+- AI 生成ピクセルアートの不整合を修正
+- 厳密なパレットに色を量子化
+- ディザリングなどの詳細を保持
+
+### 📥 インストール
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/yourusername/comfyui-AFOLIE-ImageSize.git
+```
+
+### 📝 ライセンス
+
+GPL-3.0 ライセンス
+
+### 👤 作者
+
+AFOLIE
 
 ---
 
-**注意 / Note**: 
-- 此插件需要ComfyUI环境
-- 所有依赖项通常已包含在ComfyUI中
-- 重启ComfyUI后节点才会生效
+<a name="한국어"></a>
+## 🇰🇷 한국어
 
-**This plugin requires ComfyUI environment**
-- All dependencies are typically included in ComfyUI
-- Restart ComfyUI for nodes to take effect
+이미지 처리를 위한 포괄적인 ComfyUI 커스텀 노드 컬렉션. Photoshop과 유사한 이미지 크기 조정, 배치 이미지 로딩, 배경 투명화, 픽셀 정렬 및 사용자 정의 폴더 저장 기능을 제공합니다.
+
+### 📦 기능 개요
+
+이 플러그인은 4개 카테고리로 구성된 **9개의 강력한 노드**를 제공합니다:
+
+#### 🖼️ 이미지 처리 (AFOLIE/图像)
+| 노드 | 설명 |
+|------|------|
+| **이미지 픽셀 리사이즈 📐** | 픽셀 기반 이미지 크기 조정, 7가지 리샘플링 방법 |
+| **이미지 배율 리사이즈 🔢** | 배율 기반 이미지 크기 조정 (0.01x - 12x) |
+| **이미지 그리드 자르기 ✂️** | 이미지를 그리드 셀로 분할 |
+| **픽셀 정렬 🎯** | 픽셀 아트를 위해 픽셀을 완벽한 그리드에 정렬 |
+| **배경 투명화 🎨** | 지정된 색상의 배경을 투명으로 변환 |
+
+#### 📥 입력 노드 (AFOLIE/输入)
+| 노드 | 설명 |
+|------|------|
+| **배치 이미지 입력 📁** | 원본 크기를 유지하며 배치 이미지 로드 |
+| **배치 이미지 픽셀 입력 📐** | 통일된 픽셀 크기로 리사이즈하여 로드 |
+| **배치 이미지 배율 입력 🔢** | 배율로 통일 스케일링하여 로드 |
+
+#### 💾 출력 노드 (AFOLIE/输出)
+| 노드 | 설명 |
+|------|------|
+| **이미지 폴더 💾** | 사용자 정의 폴더 경로에 이미지 저장 |
+
+### 📸 스크린샷
+
+![노드 개요](images/node_overview.png)
+
+### 🎯 주요 기능
+
+#### 배경 투명화 🎨
+- 16진수 색상 입력 (#ffffff 형식)
+- HSB 슬라이더가 있는 색상 선택기
+- 색상 허용 오차 슬라이더 (0-100%)
+- 내부 색상 보호 옵션
+
+#### 픽셀 정렬 🎯
+- 픽셀을 완벽한 그리드에 정렬
+- AI 생성 픽셀 아트의 불일치 수정
+- 엄격한 팔레트로 색상 양자화
+- 디더링과 같은 세부 사항 유지
+
+### 📥 설치
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/yourusername/comfyui-AFOLIE-ImageSize.git
+```
+
+### 📝 라이선스
+
+GPL-3.0 라이선스
+
+### 👤 작성자
+
+AFOLIE
+
+---
+
+<a name="deutsch"></a>
+## 🇩🇪 Deutsch
+
+Eine umfassende ComfyUI Custom Node-Sammlung für die Bildverarbeitung. Bietet Photoshop-ähnliche Bildgrößenänderung, Batch-Bildladung, Hintergrundtransparenz, Pixelausrichtung und benutzerdefinierte Ordnerspeicherung.
+
+### 📦 Funktionsübersicht
+
+Dieses Plugin bietet **9 leistungsstarke Nodes** in vier Kategorien:
+
+#### 🖼️ Bildverarbeitung (AFOLIE/图像)
+| Node | Beschreibung |
+|------|--------------|
+| **Bild-Pixel-Größenänderung 📐** | Pixelbasierte Bildgrößenänderung mit 7 Resampling-Methoden |
+| **Bild-Skalierung 🔢** | Skalierungsbasierte Bildgrößenänderung (0,01x - 12x) |
+| **Bild-Raster-Zuschnitt ✂️** | Bild in Rasterzellen aufteilen |
+| **Pixelausrichtung 🎯** | Pixel für Pixel-Art am perfekten Raster ausrichten |
+| **Hintergrund-Transparenz 🎨** | Angegebene Hintergrundfarbe in transparent umwandeln |
+
+#### 📥 Eingabe-Nodes (AFOLIE/输入)
+| Node | Beschreibung |
+|------|--------------|
+| **Batch-Bilder-Eingabe 📁** | Batch-Bilder mit Originalgrößen laden |
+| **Batch-Bilder-Pixel-Eingabe 📐** | Laden und auf einheitliche Pixelgröße anpassen |
+| **Batch-Bilder-Skalierung-Eingabe 🔢** | Laden und mit Multiplikator skalieren |
+
+#### 💾 Ausgabe-Nodes (AFOLIE/输出)
+| Node | Beschreibung |
+|------|--------------|
+| **Bildordner 💾** | Bilder in benutzerdefinierten Ordnerpfaden speichern |
+
+### 📸 Screenshots
+
+![Node-Übersicht](images/node_overview.png)
+
+### 🎯 Hauptfunktionen
+
+#### Hintergrund-Transparenz 🎨
+- Hex-Farbeingabe (#ffffff Format)
+- Farbwähler mit HSB-Schieberegler
+- Farbtoleranz-Schieberegler (0-100%)
+- Option zum Schutz interner Farben
+
+#### Pixelausrichtung 🎯
+- Pixel am perfekten Raster ausrichten
+- Inkonsistenzen in KI-generierter Pixel-Art beheben
+- Farben auf strenge Palette quantisieren
+- Details wie Dithering beibehalten
+
+### 📥 Installation
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/yourusername/comfyui-AFOLIE-ImageSize.git
+```
+
+### 📝 Lizenz
+
+GPL-3.0 Lizenz
+
+### 👤 Autor
+
+AFOLIE
+
+---
+
+<a name="italiano"></a>
+## 🇮🇹 Italiano
+
+Una collezione completa di nodi personalizzati ComfyUI per l'elaborazione delle immagini. Fornisce ridimensionamento immagini simile a Photoshop, caricamento batch di immagini, trasparenza dello sfondo, allineamento pixel e salvataggio in cartelle personalizzate.
+
+### 📦 Panoramica delle Funzionalità
+
+Questo plugin fornisce **9 potenti nodi** organizzati in quattro categorie:
+
+#### 🖼️ Elaborazione Immagini (AFOLIE/图像)
+| Nodo | Descrizione |
+|------|-------------|
+| **Ridimensionamento Pixel Immagine 📐** | Ridimensionamento basato su pixel con 7 metodi di ricampionamento |
+| **Ridimensionamento Scala Immagine 🔢** | Ridimensionamento basato su scala (0,01x - 12x) |
+| **Ritaglio Griglia Immagine ✂️** | Dividere l'immagine in celle della griglia |
+| **Allineamento Pixel 🎯** | Allineare i pixel alla griglia perfetta per pixel art |
+| **Trasparenza Sfondo 🎨** | Convertire il colore di sfondo specificato in trasparente |
+
+#### 📥 Nodi di Input (AFOLIE/输入)
+| Nodo | Descrizione |
+|------|-------------|
+| **Input Immagini Batch 📁** | Caricare immagini batch mantenendo le dimensioni originali |
+| **Input Immagini Batch Pixel 📐** | Caricare e ridimensionare a dimensioni pixel uniformi |
+| **Input Immagini Batch Scala 🔢** | Caricare e scalare con moltiplicatore |
+
+#### 💾 Nodi di Output (AFOLIE/输出)
+| Nodo | Descrizione |
+|------|-------------|
+| **Cartella Immagini 💾** | Salvare immagini in percorsi cartella personalizzati |
+
+### 📸 Screenshot
+
+![Panoramica dei Nodi](images/node_overview.png)
+
+### 🎯 Funzionalità Principali
+
+#### Trasparenza Sfondo 🎨
+- Input colore esadecimale (formato #ffffff)
+- Selettore colore con cursore HSB
+- Cursore tolleranza colore (0-100%)
+- Opzione protezione colori interni
+
+#### Allineamento Pixel 🎯
+- Allineare i pixel alla griglia perfetta
+- Correggere le incongruenze nella pixel art generata da AI
+- Quantizzare i colori in una palette rigorosa
+- Preservare dettagli come il dithering
+
+### 📥 Installazione
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/yourusername/comfyui-AFOLIE-ImageSize.git
+```
+
+### 📝 Licenza
+
+Licenza GPL-3.0
+
+### 👤 Autore
+
+AFOLIE
+
+---
+
+<a name="svenska"></a>
+## 🇸🇪 Svenska
+
+En omfattande ComfyUI anpassad nodsamling för bildbehandling. Tillhandahåller Photoshop-liknande bildstorleksändring, batch-bildladdning, bakgrundstransparens, pixeljustering och anpassad mapplagring.
+
+### 📦 Funktionsöversikt
+
+Detta plugin tillhandahåller **9 kraftfulla noder** organiserade i fyra kategorier:
+
+#### 🖼️ Bildbehandling (AFOLIE/图像)
+| Nod | Beskrivning |
+|-----|-------------|
+| **Bild Pixel Storleksändring 📐** | Pixelbaserad bildstorleksändring med 7 omsamplingsmetoder |
+| **Bild Skala Storleksändring 🔢** | Skalbaserad bildstorleksändring (0,01x - 12x) |
+| **Bild Rutnät Beskärning ✂️** | Dela upp bild i rutnätsceller |
+| **Pixeljustering 🎯** | Justera pixlar till perfekt rutnät för pixelkonst |
+| **Bakgrundstransparens 🎨** | Konvertera angiven bakgrundsfärg till transparent |
+
+#### 📥 Inmatningsnoder (AFOLIE/输入)
+| Nod | Beskrivning |
+|-----|-------------|
+| **Batch-bilder Inmatning 📁** | Ladda batch-bilder med originalstorlekar |
+| **Batch-bilder Pixel Inmatning 📐** | Ladda och ändra storlek till enhetliga pixeldimensioner |
+| **Batch-bilder Skala Inmatning 🔢** | Ladda och skala med multiplikator |
+
+#### 💾 Utmatningsnoder (AFOLIE/输出)
+| Nod | Beskrivning |
+|-----|-------------|
+| **Bildmapp 💾** | Spara bilder till anpassade mappsökvägar |
+
+### 📸 Skärmdumpar
+
+![Nodöversikt](images/node_overview.png)
+
+### 🎯 Huvudfunktioner
+
+#### Bakgrundstransparens 🎨
+- Hex-färginmatning (#ffffff format)
+- Färgväljare med HSB-reglage
+- Färgtolerans-reglage (0-100%)
+- Alternativ för att skydda interna färger
+
+#### Pixeljustering 🎯
+- Justera pixlar till perfekt rutnät
+- Fixa inkonsekvenser i AI-genererad pixelkonst
+- Kvantisera färger till strikt palett
+- Bevara detaljer som dithering
+
+### 📥 Installation
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/yourusername/comfyui-AFOLIE-ImageSize.git
+```
+
+### 📝 Licens
+
+GPL-3.0 Licens
+
+### 👤 Författare
+
+AFOLIE
+
+---
+
+## 📋 Version History / 版本历史
+
+### v1.1.0 (2025-12-19)
+- ✅ Added Pixel Alignment node (像素对齐)
+- ✅ Added Background Transparent node (背景透明化)
+- ✅ Added Image Grid Crop node (图像网格裁剪)
+- ✅ Multi-language README support
+
+### v1.0.0 (2025-12-13)
+- ✅ Initial release
+- ✅ Image Pixel Resize node
+- ✅ Image Scale Resize node
+- ✅ Three Input batch nodes
+- ✅ Image Folder save node
+
+---
+
+<div align="center">
+
+**Made with ❤️ by AFOLIE**
+
+</div>

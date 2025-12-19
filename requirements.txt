@@ -1,0 +1,14 @@
+# AFOLIE ImageSize Node Dependencies
+# ComfyUI 自定义节点依赖
+
+# 核心依赖（通常已包含在 ComfyUI 中）
+torch>=1.9.0
+numpy>=1.21.0
+Pillow>=8.0.0
+
+# 背景透明化节点依赖（连通区域分析）
+scipy>=1.7.0
+
+# 注意：
+# - folder_paths 是 ComfyUI 内置模块，无需安装
+# - 像素对齐节点使用 bin/spritefusion-pixel-snapper.exe，无需额外 Python 依赖
