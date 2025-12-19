@@ -42,7 +42,9 @@ This plugin provides **9 powerful nodes** organized into four categories:
 
 ### 📸 Screenshots
 
-![Node Overview](images/node_overview.png)
+![Screenshot 1](images/01.png)
+![Screenshot 2](images/02.png)
+![Screenshot 3](images/03.png)
 
 ### 🎯 Key Features
 
@@ -121,7 +123,9 @@ ComfyUI 自定义节点集合，提供类似 Photoshop 的图像大小调整、�
 
 ### 📸 截图
 
-![节点概览](images/node_overview.png)
+![截图 1](images/01.png)
+![截图 2](images/02.png)
+![截图 3](images/03.png)
 
 ### 🎯 主要功能
 
@@ -200,7 +204,9 @@ AFOLIE
 
 ### 📸 スクリーンショット
 
-![ノード概要](images/node_overview.png)
+![スクリーンショット 1](images/01.png)
+![スクリーンショット 2](images/02.png)
+![スクリーンショット 3](images/03.png)
 
 ### 🎯 主な機能
 
@@ -265,7 +271,9 @@ AFOLIE
 
 ### 📸 스크린샷
 
-![노드 개요](images/node_overview.png)
+![스크린샷 1](images/01.png)
+![스크린샷 2](images/02.png)
+![스크린샷 3](images/03.png)
 
 ### 🎯 주요 기능
 
@@ -330,7 +338,9 @@ Dieses Plugin bietet **9 leistungsstarke Nodes** in vier Kategorien:
 
 ### 📸 Screenshots
 
-![Node-Übersicht](images/node_overview.png)
+![Screenshot 1](images/01.png)
+![Screenshot 2](images/02.png)
+![Screenshot 3](images/03.png)
 
 ### 🎯 Hauptfunktionen
 
@@ -395,7 +405,9 @@ Questo plugin fornisce **9 potenti nodi** organizzati in quattro categorie:
 
 ### 📸 Screenshot
 
-![Panoramica dei Nodi](images/node_overview.png)
+![Screenshot 1](images/01.png)
+![Screenshot 2](images/02.png)
+![Screenshot 3](images/03.png)
 
 ### 🎯 Funzionalità Principali
 
@@ -460,7 +472,9 @@ Detta plugin tillhandahåller **9 kraftfulla noder** organiserade i fyra kategor
 
 ### 📸 Skärmdumpar
 
-![Nodöversikt](images/node_overview.png)
+![Skärmdump 1](images/01.png)
+![Skärmdump 2](images/02.png)
+![Skärmdump 3](images/03.png)
 
 ### 🎯 Huvudfunktioner
 
